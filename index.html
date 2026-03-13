@@ -909,6 +909,9 @@ Respond ONLY with valid JSON (no markdown):
     });
 
     const data = await response.json();
+    if (!data.content) {
+      throw new Error('Claude error: ' + JSON.stringify(data));
+    }
     const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
     const p = JSON.parse(raw);
 
