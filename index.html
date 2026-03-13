@@ -84,12 +84,14 @@ body::before {
 .vt-btn.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
 
 #humanGrid {
-  columns:3; column-gap:1.8rem;
+  columns:4; column-gap:1.2rem;
+  max-width:1200px; margin:0 auto;
 }
-@media(max-width:900px) { #humanGrid { columns:2; } }
-@media(max-width:500px) { #humanGrid { columns:1; } }
+@media(max-width:1100px) { #humanGrid { columns:3; } }
+@media(max-width:700px)  { #humanGrid { columns:2; } }
+@media(max-width:400px)  { #humanGrid { columns:1; } }
 
-.h-card { cursor:pointer; transition:transform .3s; break-inside:avoid; margin-bottom:1.8rem; display:inline-block; width:100%; }
+.h-card { cursor:pointer; transition:transform .3s; break-inside:avoid; margin-bottom:1.2rem; display:inline-block; width:100%; }
 .h-card.selected { outline:1px solid var(--sumi); outline-offset:4px; }
 .h-card:hover { transform:translateY(-4px); }
 
