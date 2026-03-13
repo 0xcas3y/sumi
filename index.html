@@ -452,8 +452,12 @@ body { animation:pageFade 1s ease; }
   <div class="admin-panel" id="adminPanel" style="display:none">
     <div class="admin-head">
       <span class="admin-head-title">// sumi admin · 審査</span>
-      <button class="btn-reject" onclick="adminLogout()">logout</button>
+      <div style="display:flex;gap:.8rem;align-items:center">
+        <button class="btn-approve" id="batchBtn" onclick="batchProcess()">Process All Pending</button>
+        <button class="btn-reject" onclick="adminLogout()">logout</button>
+      </div>
     </div>
+    <div id="batchStatus" style="font-family:var(--mono);font-size:.58rem;color:var(--sumi-dim);letter-spacing:.2em;margin-bottom:1.5rem;display:none"></div>
     <div class="admin-tabs">
       <button class="admin-tab active" onclick="switchAdminTab('pending',this)">Pending <span id="pendingCount"></span></button>
       <button class="admin-tab" onclick="switchAdminTab('approved',this)">Approved</button>
@@ -856,7 +860,42 @@ async function handleSubmit() {
 }
 
 // ── ADMIN ──
-async function analyzeAndApprove(id, imageUrl, location) {
+async function batchProcess() {
+  const btn = document.getElementById('batchBtn');
+  const status = document.getElementById('batchStatus');
+  btn.disabled = true;
+  status.style.display = 'block';
+
+  const { data } = await sb.from('signals').select('*').eq('status','pending').order('created_at');
+  const pending = data || [];
+
+  if (pending.length === 0) {
+    status.textContent = '// no pending signals';
+    btn.disabled = false;
+    return;
+  }
+
+  status.textContent = `// processing ${pending.length} signal${pending.length>1?'s':''}...`;
+
+  let approved = 0, rejected = 0;
+
+  for (const s of pending) {
+    status.textContent = `// analyzing ${approved + rejected + 1}/${pending.length} · approved: ${approved} · rejected: ${rejected}`;
+    try {
+      await analyzeAndApprove(s.id, s.image_url, s.location, true);
+      approved++;
+    } catch(e) {
+      rejected++;
+    }
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  status.textContent = `// done · approved: ${approved} · rejected: ${rejected}`;
+  btn.disabled = false;
+  renderAdmin();
+}
+
+async function analyzeAndApprove(id, imageUrl, location, silent=false) {
   const btn = document.getElementById('abtn-' + id);
   const status = document.getElementById('astatus-' + id);
   if (btn) btn.disabled = true;
@@ -899,8 +938,14 @@ async function analyzeAndApprove(id, imageUrl, location) {
 
 Context: Location="${location||'unknown'}"
 
-Respond ONLY with valid JSON (no markdown):
+FIRST check: does this image contain nudity, sexual content, graphic violence, gore, or illegal content? If yes, respond with {"reject":true,"reject_reason":"inappropriate content"} and nothing else.
+
+SECOND check: is this a genuine real-world photograph (not a screenshot, meme, or text image)? If not, respond with {"reject":true,"reject_reason":"not a photograph"} and nothing else.
+
+Otherwise respond ONLY with valid JSON (no markdown):
 {
+  "reject": false,
+  "reject_reason": null,
   "zh": "2 sentences Chinese, wabi-sabi poetic tone",
   "jp": "2 sentences Japanese 和文 prose",
   "en": "2 sentences English, literary and still",
@@ -935,7 +980,14 @@ Respond ONLY with valid JSON (no markdown):
     const raw = data.content.map(b => b.text || '').join('').replace(/```json|```/g, '').trim();
     const p = JSON.parse(raw);
 
-    if (status) status.textContent = '// saving...';
+    if (p.reject) {
+      if (!silent && status) status.textContent = `// rejected · ${p.reject_reason||'not suitable'}`;
+      await sb.from('signals').delete().eq('id', id);
+      if (!silent) setTimeout(() => renderAdmin(), 1000);
+      return;
+    }
+
+    if (!silent && status) status.textContent = '// saving...';
 
     await sb.from('signals').update({
       zh: p.zh, jp: p.jp, en: p.en, haiku: p.haiku,
@@ -946,8 +998,8 @@ Respond ONLY with valid JSON (no markdown):
       sumi_note: p.sumi_note, status: 'approved'
     }).eq('id', id);
 
-    if (status) status.textContent = '// approved ✓';
-    setTimeout(() => renderAdmin(), 1000);
+    if (!silent && status) status.textContent = '// approved ✓';
+    if (!silent) setTimeout(() => renderAdmin(), 1000);
 
   } catch(err) {
     if (status) status.textContent = '// error: ' + err.message;
