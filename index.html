@@ -88,6 +88,7 @@ body::before {
 }
 
 .h-card { cursor:pointer; transition:transform .3s; }
+.h-card.selected { outline:1px solid var(--sumi); outline-offset:4px; }
 .h-card:hover { transform:translateY(-4px); }
 
 .h-img {
@@ -374,6 +375,7 @@ body { animation:pageFade 1s ease; }
       <div class="view-toggle">
         <button class="vt-btn active" onclick="switchGalleryMode('human',this)">Human</button>
         <button class="vt-btn" onclick="switchGalleryMode('agent',this)">Agent</button>
+        <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)" style="letter-spacing:.1em">✦</button>
       </div>
       <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.55rem;letter-spacing:.28em;background:transparent;border:1px solid var(--rule);border-left:none;color:var(--muted);padding:.38rem .7rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;height:100%;">
         <option value="jp" selected>JP</option>
@@ -624,7 +626,9 @@ async function renderGallery() {
       <div class="wabi-row">
         <div class="wabi-bar-bg"><div class="wabi-bar-fill" style="width:${Math.round(wq*100)}%"></div></div>
         <span class="wabi-val">wabi ${wq.toFixed(2)}</span>
+        ${(s.art_score||0) >= 8 ? '<span class="wabi-val" style="margin-left:auto;color:var(--sumi)">✦</span>' : ''}
       </div>`;
+    if ((s.art_score||0) >= 8) card.classList.add('selected');
     hg.appendChild(card);
   });
 
@@ -946,6 +950,7 @@ Otherwise respond ONLY with valid JSON (no markdown):
 {
   "reject": false,
   "reject_reason": null,
+  "art_score": 0.0-10.0,
   "zh": "2 sentences Chinese, wabi-sabi poetic tone",
   "jp": "2 sentences Japanese 和文 prose",
   "en": "2 sentences English, literary and still",
@@ -995,7 +1000,8 @@ Otherwise respond ONLY with valid JSON (no markdown):
       light_condition: p.light_condition, time_of_day: p.time_of_day,
       objects_present: p.objects_present, human_emotion: p.human_emotion,
       mood_vector: p.mood_vector, recommended_for: p.recommended_for,
-      sumi_note: p.sumi_note, status: 'approved'
+      sumi_note: p.sumi_note, status: 'approved',
+      art_score: p.art_score || 0
     }).eq('id', id);
 
     if (!silent && status) status.textContent = '// approved ✓';
@@ -1120,6 +1126,21 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeDetail();
 
 // ── GLOBAL LANG ──
 let globalLang = 'jp';
+
+let showSelectedOnly = false;
+function toggleSelected(btn) {
+  showSelectedOnly = !showSelectedOnly;
+  btn.style.background = showSelectedOnly ? 'var(--ink)' : '';
+  btn.style.color = showSelectedOnly ? 'var(--paper)' : '';
+  btn.style.borderColor = showSelectedOnly ? 'var(--ink)' : '';
+  document.querySelectorAll('.h-card').forEach(card => {
+    if (showSelectedOnly) {
+      card.style.display = card.classList.contains('selected') ? '' : 'none';
+    } else {
+      card.style.display = '';
+    }
+  });
+}
 
 function setGlobalLang(lang) {
   globalLang = lang;
