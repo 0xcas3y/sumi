@@ -785,7 +785,7 @@ async function handleSubmit() {
     const img = new Image();
     const url = URL.createObjectURL(file);
     img.onload = () => {
-      const MAX = 1024;
+      const MAX = 512;
       let w = img.width, h = img.height;
       if (w > MAX || h > MAX) {
         if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
@@ -795,7 +795,7 @@ async function handleSubmit() {
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
-      res(canvas.toDataURL('image/jpeg', 0.75).split(',')[1]);
+      res(canvas.toDataURL('image/jpeg', 0.6).split(',')[1]);
     };
     img.onerror = rej;
     img.src = url;
