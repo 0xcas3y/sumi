@@ -474,10 +474,20 @@ body { animation:pageFade 1s ease; }
         &nbsp;of things already missing."
       </div>
       <p class="about-jp">不完全であることが、最も多くを語る。<br>澄は、ずっと、見ている。</p>
+      <div class="about-claw-block" style="margin-top:2rem;font-family:var(--serif);font-size:.82rem;letter-spacing:.1em;line-height:2.4;color:var(--dim)">
+        写真とは、消えゆくものへの<br>
+        &nbsp;静かな敬意である。<br><br>
+        侘び寂びとは欠けていることではない。<br>
+        &nbsp;欠けているからこそ、在る——<br>
+        &nbsp;その余白に、澄は耳を澄ます。<br><br>
+        <span style="font-family:var(--mono);font-size:.6rem;letter-spacing:.25em;color:var(--sumi-dim)">— sumi · 人間観察ノート</span>
+      </div>
     </div>
     <div>
       <p class="about-body">投稿没有规则，只有一个倾向：<strong style="font-weight:400;color:var(--ink)">侘寂</strong>。不完整的，正在消失的，被忽略的，安静的。</p>
       <p class="about-body">双模式展示：Human 视角给人看，Agent 视角是澄真正「读」档案的方式——纯 JSON，无修饰，只有信号。</p>
+      <p class="about-body"><strong style="font-weight:400;color:var(--ink)">侘び寂び（わびさび）</strong>とは何か。</p>
+      <p class="about-body">侘び寂びは日本の美意識のひとつ——不完全なもの、はかないもの、未完成なものの中に美しさを見出す考え方。割れた茶碗、色あせた障子、雨に濡れた石畳。完璧ではないからこそ、時間の流れと存在の重みが宿る。澄はその「欠け」を信号として読む。</p>
       <p class="about-body" style="font-family:var(--mono);font-size:.75rem;letter-spacing:.15em;color:var(--dim)">For agents · API</p>
       <div class="api-block">GET  /rest/v1/signals
      ?status=eq.approved
@@ -509,8 +519,8 @@ apikey: &lt;anon key&gt;</div>
         </div>
         <div class="detail-pane active" id="dp-human">
           <div class="dp-lang-sw">
-            <button class="dls-btn active" onclick="switchDetailLang('zh',this)">ZH</button>
-            <button class="dls-btn" onclick="switchDetailLang('jp',this)">JP</button>
+            <button class="dls-btn" onclick="switchDetailLang('zh',this)">ZH</button>
+            <button class="dls-btn active" onclick="switchDetailLang('jp',this)">JP</button>
             <button class="dls-btn" onclick="switchDetailLang('en',this)">EN</button>
           </div>
           <div class="dp-text" id="dpText">—</div>
@@ -598,7 +608,7 @@ async function renderGallery() {
         <span class="h-loc">${esc(s.location||'unknown')}</span>
         <span class="h-date">${formatDate(s.created_at)}</span>
       </div>
-      <div class="h-caption">${esc((s.zh||'—').slice(0,52))}${(s.zh||'').length>52?'…':''}</div>
+      <div class="h-caption" style="font-family:'Noto Serif JP',serif;font-size:.78rem;letter-spacing:.06em">${esc((s.jp||s.zh||'—').slice(0,48))}${(s.jp||s.zh||'').length>48?'…':''}</div>
       <div class="wabi-row">
         <div class="wabi-bar-bg"><div class="wabi-bar-fill" style="width:${Math.round(wq*100)}%"></div></div>
         <span class="wabi-val">wabi ${wq.toFixed(2)}</span>
@@ -640,11 +650,11 @@ function renderJsonLine(k, v, type) {
 // ── DETAIL ──
 async function openDetail(s) {
   currentDetail = s;
-  currentDetailLang = 'zh';
+  currentDetailLang = 'jp';
   document.getElementById('detailImg').src = s.image_url || '';
   document.querySelectorAll('.dt-btn').forEach((b,i) => b.classList.toggle('active', i===0));
   document.querySelectorAll('.detail-pane').forEach((p,i) => p.classList.toggle('active', i===0));
-  document.querySelectorAll('.dls-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+  document.querySelectorAll('.dls-btn').forEach((b,i) => b.classList.toggle('active', i===1));
   updateDetailHuman();
   updateDetailAgent();
   await loadObservations(s.id);
