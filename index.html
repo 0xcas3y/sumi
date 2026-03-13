@@ -597,7 +597,7 @@ function switchGalleryMode(mode, btn) {
   galleryMode = mode;
   document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('humanGrid').style.display = mode === 'human' ? 'grid' : 'none';
+  document.getElementById('humanGrid').style.display = mode === 'human' ? 'block' : 'none';
   document.getElementById('agentGrid').classList.toggle('show', mode === 'agent');
 }
 
