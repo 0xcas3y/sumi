@@ -116,8 +116,7 @@ body::before {
 .view-toggle { display:flex; }
 .vt-btn {
   font-family:var(--mono); font-size:.55rem; letter-spacing:.28em;
-  padding:.38rem .9rem; min-width:3.2rem; text-align:center;
-  border:1px solid var(--rule); border-right:none;
+  padding:.38rem .9rem; border:1px solid var(--rule); border-right:none;
   background:none; cursor:pointer; color:var(--muted); transition:all .2s;
 }
 .vt-btn:last-child { border-right:1px solid var(--rule); }
@@ -379,8 +378,8 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
 
 /* ── RESPONSIVE ── */
 @media(max-width:760px) {
-  #humanGrid { columns:2; column-gap:.5rem; max-width:100%; }
-  .h-img { height:200px; object-fit:contain; object-position:center; background:#1c1a16; }
+  #humanGrid { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; columns:unset; }
+  .h-img { height:220px; object-fit:cover; object-position:center; }
   .h-card { margin-bottom:.5rem; }
   .h-caption { font-size:.7rem; }
   .wabi-val { font-size:.42rem; }
@@ -432,8 +431,8 @@ body { animation:pageFade 1s ease; }
       <div class="view-toggle">
         <button class="vt-btn active" onclick="switchGalleryMode('human',this)">Human</button>
         <button class="vt-btn" onclick="switchGalleryMode('agent',this)">Agent</button>
-        <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)">✦</button>
-        <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="color:#c8a96e">句</button>
+        <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)" style="letter-spacing:.1em">✦</button>
+        <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="font-family:serif;letter-spacing:.1em;color:#c8a96e">句</button>
       </div>
       <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.55rem;letter-spacing:.28em;background:transparent;border:1px solid var(--rule);border-left:none;color:var(--muted);padding:.38rem .7rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;height:100%;">
         <option value="jp" selected>JP</option>
