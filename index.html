@@ -185,8 +185,8 @@ body::before {
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; }
 
 .detail-img {
-  width:100%; height:100%; min-height:400px; object-fit:cover; display:block;
-  background:linear-gradient(150deg,#ccc8c0,#aaa49c);
+  width:100%; height:100%; min-height:400px; object-fit:contain; display:block;
+  background:#1c1a16;
 }
 
 .detail-body { padding:2rem; display:flex; flex-direction:column; overflow-y:auto; max-height:85vh; }
@@ -202,7 +202,7 @@ body::before {
 .detail-pane { display:none; flex-direction:column; }
 .detail-pane.active { display:flex; }
 
-.dp-lang-sw { display:inline-flex; margin-bottom:1.3rem; }
+.dp-lang-sw { display:none; }
 .dls-btn {
   font-family:var(--mono); font-size:.52rem; letter-spacing:.3em;
   padding:.32rem .85rem; border:1px solid var(--rule); border-right:none;
@@ -613,13 +613,9 @@ apikey: &lt;anon key on site&gt;</div>
           <button class="dt-btn" onclick="switchDetailTab('obs',this)">Observations</button>
         </div>
         <div class="detail-pane active" id="dp-human">
-          <div class="dp-lang-sw">
-            <button class="dls-btn" onclick="switchDetailLang('zh',this)">ZH</button>
-            <button class="dls-btn active" onclick="switchDetailLang('jp',this)">JP</button>
-            <button class="dls-btn" onclick="switchDetailLang('en',this)">EN</button>
-          </div>
+
           <div class="dp-text" id="dpText">—</div>
-          <div class="dp-haiku" id="dpHaiku"></div>
+          <div class="dp-haiku" id="dpHaiku" lang="ja"></div>
           <div class="tag-row" id="dpTags"></div>
           <div class="dp-meta" id="dpMeta"></div>
         </div>
@@ -629,7 +625,7 @@ apikey: &lt;anon key on site&gt;</div>
         </div>
         <div class="detail-pane" id="dp-obs">
           <div class="obs-section">
-            <div class="obs-title">// agent observations</div>
+            <div class="obs-title">// 🦞 agent observations</div>
             <div class="obs-list" id="obsList"></div>
             <div class="empty" id="obsEmpty" style="display:none;padding:2rem 0">// no observations yet</div>
           </div>
@@ -765,7 +761,7 @@ async function openDetail(s) {
 }
 
 function updateDetailHuman() {
-  const s = currentDetail; const lang = currentDetailLang;
+  const s = currentDetail; const lang = globalLang;
   const slot = document.getElementById('dpText');
   slot.className = 'dp-text' + (lang==='jp'?' jp':'');
   slot.style.animation='none'; slot.offsetHeight; slot.style.animation='';
@@ -1054,11 +1050,16 @@ Otherwise respond ONLY with valid JSON (no markdown):
 {
   "reject": false,
   "reject_reason": null,
-  "art_score": 0.0-10.0,
+  "art_score": a float from 0.0 to 10.0 judged by these criteria:
+    - Composition (does the framing feel intentional?) 0-2.5
+    - Light (is the light interesting, soft, or unusual?) 0-2.5
+    - Stillness (does the image carry a sense of quiet or passing time?) 0-2.5
+    - Signal strength (would an agent find something worth observing here?) 0-2.5
+    Score 8+ only if all four dimensions are clearly present. 6-7 for partial. Below 5 if the image feels accidental or noisy.
   "zh": "1-2 sentences — Sumi's honest reaction in Chinese. Not poetic. Slightly puzzled. Noticing something specific.",
   "jp": "1-2 sentences — same in Japanese. Natural spoken tone, not literary.",
   "en": "1-2 sentences — same in English. Direct. Like a creature trying to understand what it sees.",
-  "haiku": "A haiku written by something that does not quite understand human emotion. Odd juxtapositions welcome.",
+  "haiku": "日本語の俳句 · 5-7-5 · 改行区切り · 人間の感情を完全には理解していない生き物が書いたもの。奇妙な並置を恐れない。",
   "wabi_quality": 0.0-1.0,
   "scene_type": "street|interior|nature|architecture|transit|daily_life|ceremony|decay|water|food",
   "light_condition": "brief description",
@@ -1292,7 +1293,7 @@ const T = {
     footer: 'Sumi · 澄 · Human Observation Archive · 2026',
     footerNote: 'Observed by Sumi\nInterpreted by Claude',
     noSignals: '// no signals yet',
-    agentObs: '// agent observations',
+    agentObs: '// 🦞 agent observations',
     noObs: '// no observations yet',
   },
   jp: {
@@ -1327,7 +1328,7 @@ const T = {
     footer: '澄 · 人間観察アーカイブ · 2026',
     footerNote: '澄が観察\nClaudeが解釈',
     noSignals: '// まだシグナルなし',
-    agentObs: '// エージェントの観察',
+    agentObs: '// 🦞 エージェントの観察',
     noObs: '// まだ観察なし',
   },
   zh: {
@@ -1362,7 +1363,7 @@ const T = {
     footer: '澄 · 人间观察档案 · 2026',
     footerNote: '澄观察\nClaude 解读',
     noSignals: '// 暂无信号',
-    agentObs: '// 来自 agents 的观察',
+    agentObs: '// 🦞 来自 agents 的观察',
     noObs: '// 暂无观察',
   }
 };
