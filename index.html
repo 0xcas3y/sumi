@@ -175,12 +175,11 @@ body::before {
 @keyframes modalIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
 
 .detail-close {
-  position:absolute; top:1rem; right:1rem; z-index:5;
-  font-family:var(--mono); font-size:.62rem; letter-spacing:.25em;
-  background:none; border:1px solid var(--rule); padding:.35rem .8rem;
-  cursor:pointer; color:var(--muted); transition:all .2s;
+  font-family:var(--mono); font-size:.52rem; letter-spacing:.2em;
+  background:none; border:none; padding:.3rem 0;
+  cursor:pointer; color:var(--muted); transition:color .2s; margin-left:auto;
 }
-.detail-close:hover { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.detail-close:hover { color:var(--ink); }
 
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; }
 
@@ -466,7 +465,7 @@ body { animation:pageFade 1s ease; }
         <input class="field-input" id="fLocation" type="text" placeholder="Where were you?">
       </div>
       <div class="field-group">
-        <label class="field-label">Name / handle (optional)</label>
+        <label class="field-label">signal from</label>
         <input class="field-input" id="fName" type="text" placeholder="anonymous">
       </div>
       <div class="field-group">
@@ -603,7 +602,6 @@ apikey: &lt;anon key on site&gt;</div>
 <!-- DETAIL OVERLAY -->
 <div id="detailOverlay" onclick="handleOverlayClick(event)">
   <div class="detail-box">
-    <button class="detail-close" onclick="closeDetail()">× close</button>
     <div class="detail-grid">
       <img class="detail-img" id="detailImg" alt="">
       <div class="detail-body">
@@ -611,6 +609,7 @@ apikey: &lt;anon key on site&gt;</div>
           <button class="dt-btn active" onclick="switchDetailTab('human',this)">Human</button>
           <button class="dt-btn" onclick="switchDetailTab('agent',this)">Sumi</button>
           <button class="dt-btn" onclick="switchDetailTab('obs',this)">Observations</button>
+          <button class="detail-close" onclick="closeDetail()">× close</button>
         </div>
         <div class="detail-pane active" id="dp-human">
 
@@ -1273,7 +1272,7 @@ const T = {
     close: '× close',
     dropLabel: 'photograph · something quiet',
     locLabel: 'Location', locPlaceholder: 'Where were you?',
-    nameLabel: 'Name / handle (optional)', namePlaceholder: 'anonymous',
+    nameLabel: 'signal from', namePlaceholder: 'anonymous',
     noteLabel: 'A note to Sumi (optional)', notePlaceholder: 'anything you want it to know...',
     submitBtn: 'Submit to Sumi · 澄へ',
     sumiReceived: 'sumi received signal',
@@ -1308,7 +1307,7 @@ const T = {
     close: '× 閉じる',
     dropLabel: '写真 · 静かな瞬間',
     locLabel: '場所', locPlaceholder: 'どこで撮りましたか？',
-    nameLabel: '名前 / ハンドル（任意）', namePlaceholder: '匿名',
+    nameLabel: '送り主', namePlaceholder: '匿名',
     noteLabel: '澄へのメモ（任意）', notePlaceholder: '伝えたいことがあれば...',
     submitBtn: '澄に投稿する · Submit',
     sumiReceived: '澄がシグナルを受信',
@@ -1343,7 +1342,7 @@ const T = {
     close: '× 关闭',
     dropLabel: '照片 · 安静的瞬间',
     locLabel: '地点', locPlaceholder: '你在哪里？',
-    nameLabel: '名字 / 昵称（可选）', namePlaceholder: '匿名',
+    nameLabel: '来自', namePlaceholder: '匿名',
     noteLabel: '给澄的备注（可选）', notePlaceholder: '想让它知道什么...',
     submitBtn: '投稿给澄 · Submit',
     sumiReceived: '澄收到了信号',
