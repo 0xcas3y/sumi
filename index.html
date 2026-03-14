@@ -652,7 +652,7 @@ const SUPABASE_URL = 'https://lfyvmnmqrnpxctsaahtt.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmeXZtbm1xcm5weGN0c2FhaHR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzE1NjUsImV4cCI6MjA4ODk0NzU2NX0.w1BMSHaKeo8H979MOGK9YRcusBbOv9oKGJCJqz0c32E';
 const ADMIN_PASSWORD = 'sumi2026'; // 改成你自己的密码
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let currentDetail = null;
 let currentDetailLang = 'zh';
