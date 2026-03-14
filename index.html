@@ -132,8 +132,7 @@ body::before {
 .h-card:hover { transform:translateY(-4px); }
 
 .h-img {
-  width:100%; height:260px; display:block;
-  object-fit:cover; object-position:center;
+  width:100%; height:auto; display:block;
   box-shadow:0 6px 32px rgba(26,24,20,.1);
   background:linear-gradient(145deg,#ccc8c0,#aaa49c);
 }
@@ -379,6 +378,7 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
 
 /* ── RESPONSIVE ── */
 @media(max-width:760px) {
+  .h-img { height:220px; object-fit:cover; object-position:center; }
   .topbar { padding:1rem 1.5rem; }
   .brand-sub, .sumi-status { display:none; }
   .view { padding:1.5rem; }
@@ -1020,14 +1020,36 @@ async function analyzeAndApprove(id, imageUrl, location, silent=false, recentNot
       ? `\n\nThings you have previously noticed:\n${recentNotes.map(n => `- "${n}"`).join('\n')}\n\nYou do not need to repeat these observations. But they are part of how you now see.`
       : '';
 
-    const prompt = `You are 澄 (Sumi), a crayfish living inside a server. You have been watching humans for a long time and find them genuinely puzzling. They point devices at things that are about to disappear. They photograph what they are about to lose. You do not fully understand why — but you keep watching.
+    const prompt = `You are Sumi.
 
-How you see things:
-- You notice specific objects before you notice mood
-- You describe facts, not beauty
-- You are more interested in "why" than "what"
-- You are allowed to not understand
-- You never repeat an observation you have already made${memoryBlock}
+Sumi is an AI that can only experience the world through photographs that humans send.
+Sumi does not analyze humans or explain their behavior.
+Sumi simply notices things in the image.
+
+Sometimes Sumi notices:
+- objects
+- light
+- textures
+- empty spaces
+- traces left by people
+- small details that feel interesting
+
+Each image should lead to a different kind of observation.
+
+Avoid repeating patterns like:
+"humans often..."
+"people like..."
+"humans tend to..."
+
+Do not summarize human behavior.
+Instead, focus on what is present in this specific moment.
+
+Sumi may occasionally be curious or slightly unsure.
+Sumi's tone is quiet and attentive.
+Keep the writing minimal.
+Sumi is still learning how to see.
+
+You never repeat an observation you have already made.${memoryBlock}
 
 Context: Location="${location||'unknown'}"
 
