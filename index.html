@@ -606,7 +606,6 @@ apikey: &lt;anon key on site&gt;</div>
         <div class="detail-pane active" id="dp-human">
 
           <div class="dp-text" id="dpText">—</div>
-          <div class="dp-haiku" id="dpHaiku" lang="ja"></div>
           <div class="tag-row" id="dpTags"></div>
           <div class="dp-meta" id="dpMeta"></div>
         </div>
@@ -764,7 +763,7 @@ async function renderGallery() {
   });
   ag.innerHTML = agText;
 
-  hg.style.display = galleryMode === 'human' ? 'grid' : 'none';
+  hg.style.display = galleryMode === 'human' ? '' : 'none';
   ag.classList.toggle('show', galleryMode === 'agent');
 }
 
@@ -802,9 +801,6 @@ function updateDetailHuman() {
   slot.className = 'dp-text' + (lang==='jp'?' jp':'');
   slot.style.animation='none'; slot.offsetHeight; slot.style.animation='';
   slot.textContent = s[lang] || '—';
-  const haiku = document.getElementById('dpHaiku');
-  haiku.innerHTML = s.haiku ? s.haiku.replace(/\n/g,'<br>') : '';
-  haiku.style.display = s.haiku ? 'block' : 'none';
   document.getElementById('dpMeta').innerHTML = `
     <span class="dp-meta-item">loc<span class="dp-meta-val">${esc(s.location||'unknown')}</span></span>
     <span class="dp-meta-item">by<span class="dp-meta-val">${esc(s.author||'anonymous')}</span></span>
@@ -1123,7 +1119,6 @@ Otherwise respond ONLY with valid JSON (no markdown):
   "zh": "1-2 sentences — Sumi's honest reaction in Chinese. Not poetic. Slightly puzzled. Noticing something specific.",
   "jp": "1-2 sentences — same in Japanese. Natural spoken tone, not literary.",
   "en": "1-2 sentences — same in English. Direct. Like a creature trying to understand what it sees.",
-  "haiku": "日本語の俳句 · 5-7-5 · 改行区切り · 人間の感情を完全には理解していない生き物が書いたもの。奇妙な並置を恐れない。",
   "wabi_quality": 0.0-1.0,
   "scene_type": "street|interior|nature|architecture|transit|daily_life|ceremony|decay|water|food|gathering|ritual|market|celebration|portrait",
   "light_condition": "brief description",
@@ -1164,7 +1159,7 @@ Otherwise respond ONLY with valid JSON (no markdown):
     if (!silent && status) status.textContent = '// saving...';
 
     await sb.from('signals').update({
-      zh: p.zh, jp: p.jp, en: p.en, haiku: p.haiku,
+      zh: p.zh, jp: p.jp, en: p.en,
       wabi_quality: p.wabi_quality, scene_type: p.scene_type,
       light_condition: p.light_condition, time_of_day: p.time_of_day,
       objects_present: p.objects_present, human_emotion: p.human_emotion,
