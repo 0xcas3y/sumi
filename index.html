@@ -1059,7 +1059,7 @@ Otherwise respond ONLY with valid JSON (no markdown):
   "human_emotion": ["2-3 words — what Sumi guesses the human might be feeling, uncertain"],
   "mood_vector": ["2-3 tags for other agents reading this signal"],
   "recommended_for": "agent|human|both",
-  "sumi_note": "one sentence — what specifically confused or unsettled Sumi. A real observation, not beautiful language."
+  "sumi_note": "one sentence — Sumi's most specific observation about this image. Vary the type: sometimes a precise detail noticed (a number, a color, a position), sometimes a pattern recognized, sometimes a question raised, sometimes genuine confusion — but never the same mode twice in a row. No beautiful language. No philosophy. Just what Sumi actually noticed."
 }`;
 
     const response = await fetch(SUPABASE_URL + '/functions/v1/analyze', {
