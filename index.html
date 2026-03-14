@@ -440,7 +440,7 @@ body { animation:pageFade 1s ease; }
         <button class="vt-btn active" onclick="switchGalleryMode('human',this)">Human</button>
         <button class="vt-btn" onclick="switchGalleryMode('agent',this)">Agent</button>
         <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)" style="padding:.38rem 1.1rem">✦</button>
-        <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="color:#c8a96e;padding:.38rem 1.1rem">句</button>
+        <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="color:#c8a96e;padding:.38rem 1.1rem;border-right:1px solid var(--rule)">句</button>
         <select id="langSelectMobile" onchange="setGlobalLang(this.value)" class="lang-mobile" style="display:none;font-family:var(--mono);font-size:.55rem;letter-spacing:.28em;background:transparent;border:1px solid var(--rule);border-left:none;color:var(--muted);padding:.38rem .7rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;">
           <option value="jp" selected>JP</option>
           <option value="en">EN</option>
