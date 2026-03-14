@@ -139,7 +139,7 @@ body::before {
 
 .h-meta { margin-top:.8rem; display:flex; justify-content:space-between; align-items:baseline; }
 .h-loc { font-family:var(--mono); font-size:.55rem; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; }
-.h-date { font-family:'Noto Serif JP',serif; font-size:.58rem; color:var(--rule); }
+.h-date { font-family:'Noto Serif JP',serif; font-size:.58rem; color:var(--muted); }
 .h-caption { margin-top:.5rem; font-size:.82rem; color:var(--dim); line-height:1.9; letter-spacing:.04em; }
 
 .wabi-row { display:flex; align-items:center; gap:.4rem; margin-top:.5rem; }
@@ -432,6 +432,7 @@ body { animation:pageFade 1s ease; }
         <button class="vt-btn active" onclick="switchGalleryMode('human',this)">Human</button>
         <button class="vt-btn" onclick="switchGalleryMode('agent',this)">Agent</button>
         <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)" style="letter-spacing:.1em">✦</button>
+        <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="font-family:serif;letter-spacing:.1em;color:#c8a96e">句</button>
       </div>
       <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.55rem;letter-spacing:.28em;background:transparent;border:1px solid var(--rule);border-left:none;color:var(--muted);padding:.38rem .7rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;height:100%;">
         <option value="jp" selected>JP</option>
@@ -676,12 +677,13 @@ function renderCard(s) {
   const wq = s.wabi_quality || 0;
   const card = document.createElement('div');
   card.className = 'h-card';
+  card.dataset.haiku = s.haiku ? '1' : '0';
   card.onclick = () => openDetail(s);
   const capText = s[globalLang] || s.jp || s.zh || '—';
   card.innerHTML = `
       <img class="h-img" src="${esc(s.image_url||'')}" alt="" loading="lazy">
       <div class="h-meta">
-        <span class="h-loc">${esc(s.location||'unknown')}</span>
+        <span class="h-loc">${esc(s.location||'unknown')}${s.recommended_for ? '<span style="font-family:var(--mono);font-size:.4rem;letter-spacing:.15em;margin-left:.4rem;padding:.1rem .3rem;border:1px solid currentColor;opacity:.7;vertical-align:middle;color:' + (s.recommended_for==='agent'?'#9bb8d4':s.recommended_for==='human'?'#c8a96e':'var(--sumi-dim)') + '">' + (s.recommended_for==='agent'?'A':s.recommended_for==='human'?'H':'B') + '</span>' : ''}</span>
         <span class="h-date">${formatDate(s.created_at)}</span>
       </div>
       <div class="h-caption" style="font-family:'Noto Serif JP',serif;font-size:.78rem;letter-spacing:.06em"
@@ -1299,6 +1301,22 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') closeDetail();
 let globalLang = 'jp';
 
 let showSelectedOnly = false;
+function toggleHaiku(btn) {
+  const isActive = btn.classList.contains('active');
+  document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
+  if (!isActive) {
+    btn.classList.add('active');
+    const hg = document.getElementById('humanGrid');
+    hg.style.display = '';
+    document.querySelectorAll('.h-card').forEach(card => {
+      card.style.display = card.dataset.haiku === '1' ? '' : 'none';
+    });
+  } else {
+    document.querySelector('.vt-btn').classList.add('active');
+    document.querySelectorAll('.h-card').forEach(card => { card.style.display = ''; });
+  }
+}
+
 function toggleSelected(btn) {
   showSelectedOnly = !showSelectedOnly;
   btn.style.background = showSelectedOnly ? 'var(--ink)' : '';
