@@ -375,6 +375,8 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
 .donate-amt:hover { border-color:var(--sumi-dim); color:var(--ink); }
 .donate-amt.active { border-color:var(--sumi); color:var(--sumi); }
 .footer-note { font-family:var(--mono); font-size:.55rem; letter-spacing:.2em; color:var(--rule); text-align:right; line-height:2; }
+.footer-note span { display:inline-block; opacity:0; transition:opacity 1.2s ease; }
+.footer-note span.visible { opacity:1; }
 
 /* ── RESPONSIVE ── */
 @media(max-width:760px) {
@@ -639,7 +641,7 @@ apikey: &lt;anon key on site&gt;</div>
 
 <footer>
   <div class="footer-brand">Sumi · 澄 · Human Observation Archive · 2026</div>
-  <div class="footer-note">Observed by Sumi<br>Interpreted by Claude</div>
+  <div class="footer-note"><span id="footerLine1"></span><br><span id="footerLine2"></span></div>
 </footer>
 
 <script>
@@ -662,7 +664,25 @@ function switchView(name, btn) {
   if (btn) btn.classList.add('active');
   else document.querySelectorAll('.nav-tab')[['gallery','submit','about','admin'].indexOf(name)]?.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
-  if (name === 'gallery') renderGallery();
+  if (name === 'gallery') // ── FOOTER FADE LOOP ──
+(function() {
+  const l1 = document.getElementById('footerLine1');
+  const l2 = document.getElementById('footerLine2');
+  if (!l1 || !l2) return;
+  function fadeIn() {
+    l1.classList.add('visible');
+    setTimeout(() => l2.classList.add('visible'), 400);
+    setTimeout(fadeOut, 3500);
+  }
+  function fadeOut() {
+    l1.classList.remove('visible');
+    l2.classList.remove('visible');
+    setTimeout(fadeIn, 1800);
+  }
+  setTimeout(fadeIn, 800);
+})();
+
+renderGallery();
 
 // ── DONATE ──
 const WALLET = '0x3F1E35866689A33c3f77024739E9C91A65E72b25';
@@ -1467,7 +1487,13 @@ function applyLang(lang) {
   const fb = document.querySelector('.footer-brand');
   if (fb) fb.textContent = t.footer;
   const fn = document.querySelector('.footer-note');
-  if (fn) fn.innerHTML = t.footerNote.replace(/\n/g,'<br>');
+  if (fn) {
+    const parts = t.footerNote.split('\n');
+    const l1 = document.getElementById('footerLine1');
+    const l2 = document.getElementById('footerLine2');
+    if (l1) l1.textContent = parts[0] || '';
+    if (l2) l2.textContent = parts[1] || '';
+  }
   // Obs
   const ot = document.querySelector('.obs-title');
   if (ot) ot.textContent = t.agentObs;
