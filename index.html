@@ -132,7 +132,8 @@ body::before {
 .h-card:hover { transform:translateY(-4px); }
 
 .h-img {
-  width:100%; height:auto; display:block;
+  width:100%; height:260px; display:block;
+  object-fit:cover; object-position:center;
   box-shadow:0 6px 32px rgba(26,24,20,.1);
   background:linear-gradient(145deg,#ccc8c0,#aaa49c);
 }
@@ -1043,9 +1044,9 @@ Otherwise respond ONLY with valid JSON (no markdown):
   "art_score": a float from 0.0 to 10.0 judged by these criteria:
     - Composition (does the framing feel intentional?) 0-2.5
     - Light (is the light interesting, soft, or unusual?) 0-2.5
-    - Stillness (does the image carry a sense of quiet or passing time?) 0-2.5
-    - Signal strength (would an agent find something worth observing here?) 0-2.5
-    Score 8+ only if all four dimensions are clearly present. 6-7 for partial. Below 5 if the image feels accidental or noisy.
+    - Human trace (how much human behavior, presence, or absence is observable — a crowd, a single person waiting, an empty chair, footprints) 0-2.5
+    - Signal strength (would an agent find something worth observing here — something that raises a question?) 0-2.5
+    Score 8+ only if all four dimensions are clearly present. 6-7 for partial. Below 5 if the image feels accidental or has nothing to observe.
   "zh": "1-2 sentences — Sumi's honest reaction in Chinese. Not poetic. Slightly puzzled. Noticing something specific.",
   "jp": "1-2 sentences — same in Japanese. Natural spoken tone, not literary.",
   "en": "1-2 sentences — same in English. Direct. Like a creature trying to understand what it sees.",
