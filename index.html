@@ -123,8 +123,8 @@ body::before {
 .vt-btn.active { background:var(--ink); color:var(--paper); border-color:var(--ink); }
 
 #humanGrid {
-  columns:2; column-gap:1.2rem;
-  max-width:900px; margin:0 auto;
+  columns:1;
+  max-width:600px; margin:0 auto;
 }
 
 .h-card { cursor:pointer; transition:transform .3s; break-inside:avoid; margin-bottom:1.2rem; display:inline-block; width:100%; }
@@ -378,8 +378,9 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
 
 /* ── RESPONSIVE ── */
 @media(max-width:760px) {
-  .h-img { height:220px; object-fit:cover; object-position:center; }
-  #humanGrid { columns:2; column-gap:.8rem; }
+  #humanGrid { columns:2; column-gap:.6rem; max-width:100%; }
+  .h-img { height:180px; object-fit:cover; object-position:center; }
+  .h-card { margin-bottom:.6rem; }
   .topbar { padding:1rem 1.5rem; }
   .brand-sub, .sumi-status { display:none; }
   .view { padding:1.5rem; }
