@@ -70,6 +70,45 @@ body::before {
 .view { display:none; padding:3rem; min-height:calc(100vh - 62px); }
 .view.active { display:block; }
 
+/* ── HERO ── */
+.hero {
+  text-align:center;
+  padding:5rem 2rem 4rem;
+  max-width:680px;
+  margin:0 auto 2rem;
+  border-bottom:1px solid var(--rule);
+}
+.hero-title {
+  font-size:1.35rem;
+  font-weight:300;
+  line-height:1.7;
+  color:var(--ink);
+  letter-spacing:.02em;
+  margin-bottom:1rem;
+}
+.hero-sub {
+  font-family:var(--mono);
+  font-size:.62rem;
+  letter-spacing:.25em;
+  color:var(--muted);
+  margin-bottom:2rem;
+}
+.hero-btn {
+  font-family:var(--mono);
+  font-size:.58rem;
+  letter-spacing:.3em;
+  color:var(--sumi);
+  background:none;
+  border:1px solid var(--sumi);
+  padding:.55rem 1.6rem;
+  cursor:pointer;
+  transition:all .2s;
+}
+.hero-btn:hover {
+  background:var(--sumi);
+  color:var(--paper);
+}
+
 /* ── GALLERY ── */
 .gallery-header { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:2.5rem; }
 .gallery-count { font-family:var(--mono); font-size:.6rem; letter-spacing:.3em; color:var(--muted); }
@@ -373,6 +412,13 @@ body { animation:pageFade 1s ease; }
 
 <!-- GALLERY -->
 <div class="view active" id="view-gallery">
+
+  <div class="hero">
+    <p class="hero-title about-i18n" data-key="heroTitle">An AI observing the quiet moments humans photograph.</p>
+    <p class="hero-sub about-i18n" data-key="heroSub">Upload a moment. Let Sumi observe it.</p>
+    <button class="hero-btn" onclick="switchView('submit', document.querySelectorAll('.nav-tab')[1])" id="heroSubmitBtn">→ send a signal</button>
+  </div>
+
   <div class="gallery-header">
     <span class="gallery-count" id="galleryCount">— signals</span>
     <div style="display:flex;align-items:center;gap:0">
@@ -1216,6 +1262,9 @@ function truncate(str, n) {
 const T = {
   en: {
     gallery: 'Gallery', submit: 'Submit', about: 'About', admin: 'Admin',
+    heroTitle: 'An AI observing the quiet moments humans photograph.',
+    heroSub: 'Upload a moment. Let Sumi observe it.',
+    heroBtn: '→ send a signal',
     observing: 'sumi · observing',
     archive: 'an AI observing what humans choose to remember',
     signals: ' signals received',
@@ -1248,6 +1297,9 @@ const T = {
   },
   jp: {
     gallery: 'ギャラリー', submit: '投稿', about: '澄について', admin: '管理',
+    heroTitle: '人間が写真に残す、静かな瞬間を観察するAI。',
+    heroSub: '瞬間を送ってください。澄が観察します。',
+    heroBtn: '→ シグナルを送る',
     observing: '澄 · 観察中',
     archive: '人間が記録することを選んだもの、を観察するAI',
     signals: ' 件のシグナル',
@@ -1280,6 +1332,9 @@ const T = {
   },
   zh: {
     gallery: '画廊', submit: '投稿', about: '关于澄', admin: '管理',
+    heroTitle: '一个 AI，观察人类选择拍下的安静瞬间。',
+    heroSub: '上传一个瞬间，让澄来观察。',
+    heroBtn: '→ 发送信号',
     observing: '澄 · 观察中',
     archive: '一个 AI，观察人类选择记住什么',
     signals: ' 个信号',
@@ -1318,6 +1373,13 @@ function applyLang(lang) {
   document.querySelectorAll('.nav-tab').forEach((b,i) => {
     b.textContent = [t.gallery, t.submit, t.about, t.admin][i];
   });
+  // Hero
+  const ht = document.querySelector('.hero-title');
+  if (ht) ht.textContent = t.heroTitle;
+  const hs = document.querySelector('.hero-sub');
+  if (hs) hs.textContent = t.heroSub;
+  const hb = document.getElementById('heroSubmitBtn');
+  if (hb) hb.textContent = t.heroBtn;
   // Status
   document.querySelectorAll('#sumiStatusText, #aboutStatusText').forEach(el => {
     el.textContent = t.observing;
