@@ -52,6 +52,7 @@ body::before {
 .brand-sub  { font-family:var(--mono); font-size:.56rem; letter-spacing:.2em; color:var(--muted); }
 
 .sumi-status { display:flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.55rem; letter-spacing:.2em; color:var(--muted); }
+.sumi-status-mobile { display:none; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.5rem; letter-spacing:.18em; color:var(--muted); padding:.4rem 1.5rem; border-bottom:1px solid var(--rule); }
 .sumi-dot { width:6px; height:6px; border-radius:50%; background:var(--sumi); animation:blink 3s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:.3} 50%{opacity:1} }
 
@@ -387,7 +388,9 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
   .h-caption { font-size:.7rem; }
   .wabi-val { font-size:.42rem; }
   .topbar { padding:1rem 1.5rem; }
-  .brand-sub, .sumi-status { display:none; }
+  .brand-sub { display:none; }
+  .sumi-status { display:none; }
+  .sumi-status-mobile { display:flex !important; }
   .view { padding:1.5rem; }
   .detail-grid, .submit-layout, .about-layout { grid-template-columns:1fr; }
   .detail-img { min-height:260px; }
@@ -422,6 +425,10 @@ body { animation:pageFade 1s ease; }
     <span class="sumi-dot"></span>
     <span id="sumiStatusText">澄 · 観察中</span>
   </div>
+</div>
+<div class="sumi-status-mobile">
+  <span class="sumi-dot"></span>
+  <span id="sumiStatusMobile">澄 · 観察中</span>
 </div>
 
 <!-- GALLERY -->
@@ -1499,7 +1506,7 @@ function applyLang(lang) {
   const hb = document.getElementById('heroSubmitBtn');
   if (hb) hb.textContent = t.heroBtn;
   // Status
-  document.querySelectorAll('#sumiStatusText, #aboutStatusText').forEach(el => {
+  document.querySelectorAll('#sumiStatusText, #aboutStatusText, #sumiStatusMobile').forEach(el => {
     el.textContent = t.observing;
   });
   // Brand sub
