@@ -802,8 +802,8 @@ async function renderGallery() {
 
   hg.style.display = galleryMode === 'human' ? '' : 'none';
   ag.classList.toggle('show', galleryMode === 'agent');
-  const sb = document.getElementById('shuffleBar');
-  if (sb) sb.style.display = allSignals.length > 0 ? 'block' : 'none';
+  const shuffleBarEl = document.getElementById('shuffleBar');
+  if (shuffleBarEl) shuffleBarEl.style.display = allSignals.length > 0 ? 'block' : 'none';
 }
 
 function renderJsonLine(k, v, type) {
