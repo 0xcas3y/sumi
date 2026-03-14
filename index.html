@@ -409,6 +409,11 @@ body { animation:pageFade 1s ease; }
     <button class="nav-tab" onclick="switchView('submit',this)">Submit</button>
     <button class="nav-tab" onclick="switchView('about',this)">About</button>
     <button class="nav-tab" onclick="switchView('admin',this)">Admin</button>
+    <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;background:transparent;border-top:1px solid var(--rule);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);color:var(--muted);padding:.5rem 0;width:5.5rem;text-align:center;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;">
+      <option value="jp" selected>JP</option>
+      <option value="en">EN</option>
+      <option value="zh">ZH</option>
+    </select>
   </div>
   <div class="sumi-status">
     <span class="sumi-dot"></span>
@@ -434,14 +439,13 @@ body { animation:pageFade 1s ease; }
         <button class="vt-btn" id="selectedBtn" onclick="toggleSelected(this)" style="letter-spacing:.1em">✦</button>
         <button class="vt-btn" id="haikuBtn" onclick="toggleHaiku(this)" style="font-family:serif;letter-spacing:.1em;color:#c8a96e">句</button>
       </div>
-      <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.55rem;letter-spacing:.28em;background:transparent;border:1px solid var(--rule);border-left:none;color:var(--muted);padding:.38rem .7rem;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;height:100%;">
-        <option value="jp" selected>JP</option>
-        <option value="en">EN</option>
-        <option value="zh">ZH</option>
-      </select>
+
     </div>
   </div>
   <div id="humanGrid"></div>
+  <div id="shuffleBar" style="text-align:center;padding:2rem 0;display:none">
+    <button onclick="shuffleGallery()" style="font-family:var(--mono);font-size:.55rem;letter-spacing:.3em;color:var(--muted);background:none;border:1px solid var(--rule);padding:.5rem 1.5rem;cursor:pointer;transition:all .2s">// shuffle</button>
+  </div>
   <pre id="agentGrid"></pre>
   <div class="empty" id="emptyState" style="display:none">// no signals yet</div>
 </div>
@@ -667,6 +671,23 @@ function switchGalleryMode(mode, btn) {
   document.getElementById('agentGrid').classList.toggle('show', mode === 'agent');
 }
 
+// ── SHUFFLE ──
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function shuffleGallery() {
+  const hg = document.getElementById('humanGrid');
+  hg.innerHTML = '';
+  renderedCount = 0;
+  allSignals = shuffleArray([...allSignals]);
+  loadMoreCards();
+}
+
 // ── INFINITE SCROLL ──
 const PAGE_SIZE = 10;
 let allSignals = [];
@@ -773,6 +794,8 @@ async function renderGallery() {
 
   hg.style.display = galleryMode === 'human' ? '' : 'none';
   ag.classList.toggle('show', galleryMode === 'agent');
+  const sb = document.getElementById('shuffleBar');
+  if (sb) sb.style.display = allSignals.length > 0 ? 'block' : 'none';
 }
 
 function renderJsonLine(k, v, type) {
