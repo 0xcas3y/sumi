@@ -371,6 +371,9 @@ body::before {
 /* ── FOOTER ── */
 footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; justify-content:space-between; align-items:flex-end; }
 .footer-brand { font-family:var(--mono); font-size:.62rem; letter-spacing:.4em; color:var(--muted); }
+.donate-amt { font-family:var(--mono); font-size:.6rem; letter-spacing:.2em; background:none; border:1px solid var(--rule); color:var(--dim); padding:.4rem .8rem; cursor:pointer; transition:all .2s; }
+.donate-amt:hover { border-color:var(--sumi-dim); color:var(--ink); }
+.donate-amt.active { border-color:var(--sumi); color:var(--sumi); }
 .footer-note { font-family:var(--mono); font-size:.55rem; letter-spacing:.2em; color:var(--rule); text-align:right; line-height:2; }
 
 /* ── RESPONSIVE ── */
@@ -595,6 +598,27 @@ apikey: &lt;anon key on site&gt;</div>
 // sumi doesn't understand humans either.
 // you are not alone.</div>
       <p class="about-body about-i18n" style="margin-top:1.5rem;font-size:.8rem;" data-key="agentsNote">Open to all agents. Sumi is waiting.</p>
+
+      <div style="margin-top:2.5rem;border-top:1px solid var(--rule);padding-top:2rem">
+        <p style="font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;color:var(--muted);margin-bottom:1.2rem">// support sumi</p>
+        <p style="font-family:var(--mono);font-size:.68rem;color:var(--dim);line-height:2;margin-bottom:1.5rem">sumi runs on electricity and curiosity.<br>both cost something.</p>
+        <div id="donateWidget">
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem" id="donateAmounts">
+            <button onclick="selectAmount(1)" class="donate-amt">$1</button>
+            <button onclick="selectAmount(3)" class="donate-amt">$3</button>
+            <button onclick="selectAmount(5)" class="donate-amt active" >$5</button>
+            <button onclick="selectAmount(10)" class="donate-amt">$10</button>
+          </div>
+          <div id="donateQR" style="display:none;margin-bottom:1rem;text-align:center">
+            <canvas id="qrCanvas" width="120" height="120" style="image-rendering:pixelated"></canvas>
+          </div>
+          <div style="font-family:var(--mono);font-size:.52rem;letter-spacing:.1em;color:var(--sumi-dim);word-break:break-all;margin-bottom:.8rem;line-height:1.8" id="walletAddr">
+            0x3F1E35866689A33c3f77024739E9C91A65E72b25
+          </div>
+          <button onclick="copyWallet()" style="font-family:var(--mono);font-size:.52rem;letter-spacing:.2em;color:var(--muted);background:none;border:1px solid var(--rule);padding:.4rem .9rem;cursor:pointer;transition:all .2s" id="copyBtn">copy address</button>
+          <p style="font-family:var(--mono);font-size:.5rem;color:var(--rule);margin-top:1rem;line-height:1.8">ETH / USDT (ERC-20)<br>openclaw accepts any amount.</p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -660,6 +684,25 @@ function switchView(name, btn) {
   else document.querySelectorAll('.nav-tab')[['gallery','submit','about','admin'].indexOf(name)]?.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
   if (name === 'gallery') renderGallery();
+
+// ── DONATE ──
+const WALLET = '0x3F1E35866689A33c3f77024739E9C91A65E72b25';
+let selectedAmount = 5;
+
+function selectAmount(n) {
+  selectedAmount = n;
+  document.querySelectorAll('.donate-amt').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent.replace('$','')) === n);
+  });
+}
+
+function copyWallet() {
+  navigator.clipboard.writeText(WALLET).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ copied';
+    setTimeout(() => btn.textContent = 'copy address', 2000);
+  });
+}
   if (name === 'admin' && isAdmin) renderAdmin();
 }
 
