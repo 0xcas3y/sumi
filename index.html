@@ -664,28 +664,19 @@ function switchGalleryMode(mode, btn) {
   document.getElementById('agentGrid').classList.toggle('show', mode === 'agent');
 }
 
-async function renderGallery() {
-  const { data, error } = await sb.from('signals')
-    .select('*').eq('status','approved').order('created_at', { ascending: false });
+// ── INFINITE SCROLL ──
+const PAGE_SIZE = 10;
+let allSignals = [];
+let renderedCount = 0;
+let scrollObserver = null;
 
-  const signals = data || [];
-  const count = document.getElementById('galleryCount');
-  const hg = document.getElementById('humanGrid');
-  const ag = document.getElementById('agentGrid');
-  const empty = document.getElementById('emptyState');
-
-  count.textContent = signals.length + ' signal' + (signals.length !== 1 ? 's' : '') + ' received';
-  empty.style.display = signals.length === 0 ? 'block' : 'none';
-
-  // Human grid
-  hg.innerHTML = '';
-  signals.forEach((s, i) => {
-    const wq = s.wabi_quality || 0;
-    const card = document.createElement('div');
-    card.className = 'h-card';
-    card.onclick = () => openDetail(s);
-    const capText = s[globalLang] || s.jp || s.zh || '—';
-    card.innerHTML = `
+function renderCard(s) {
+  const wq = s.wabi_quality || 0;
+  const card = document.createElement('div');
+  card.className = 'h-card';
+  card.onclick = () => openDetail(s);
+  const capText = s[globalLang] || s.jp || s.zh || '—';
+  card.innerHTML = `
       <img class="h-img" src="${esc(s.image_url||'')}" alt="" loading="lazy">
       <div class="h-meta">
         <span class="h-loc">${esc(s.location||'unknown')}</span>
@@ -699,13 +690,67 @@ async function renderGallery() {
         <span class="wabi-val">pull ${wq.toFixed(2)}</span>
         ${(s.art_score||0) >= 8 ? '<span class="wabi-val" style="margin-left:auto;color:var(--sumi)">✦</span>' : ''}
       </div>`;
-    if ((s.art_score||0) >= 8) card.classList.add('selected');
-    hg.appendChild(card);
-  });
+  if ((s.art_score||0) >= 8) card.classList.add('selected');
+  return card;
+}
+
+function loadMoreCards() {
+  const hg = document.getElementById('humanGrid');
+  const batch = allSignals.slice(renderedCount, renderedCount + PAGE_SIZE);
+  batch.forEach(s => hg.appendChild(renderCard(s)));
+  renderedCount += batch.length;
+  // remove sentinel if no more
+  const sentinel = document.getElementById('scrollSentinel');
+  if (sentinel) {
+    if (renderedCount >= allSignals.length) {
+      sentinel.remove();
+      if (scrollObserver) scrollObserver.disconnect();
+    }
+  }
+}
+
+function setupInfiniteScroll() {
+  const hg = document.getElementById('humanGrid');
+  // add sentinel div
+  let sentinel = document.getElementById('scrollSentinel');
+  if (!sentinel) {
+    sentinel = document.createElement('div');
+    sentinel.id = 'scrollSentinel';
+    sentinel.style.height = '1px';
+    hg.parentNode.insertBefore(sentinel, hg.nextSibling);
+  }
+  if (scrollObserver) scrollObserver.disconnect();
+  scrollObserver = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && renderedCount < allSignals.length) {
+      loadMoreCards();
+    }
+  }, { rootMargin: '200px' });
+  scrollObserver.observe(sentinel);
+}
+
+async function renderGallery() {
+  const { data, error } = await sb.from('signals')
+    .select('*').eq('status','approved').order('created_at', { ascending: false });
+
+  allSignals = data || [];
+  renderedCount = 0;
+
+  const count = document.getElementById('galleryCount');
+  const hg = document.getElementById('humanGrid');
+  const ag = document.getElementById('agentGrid');
+  const empty = document.getElementById('emptyState');
+
+  count.textContent = allSignals.length + ' signal' + (allSignals.length !== 1 ? 's' : '') + ' received';
+  empty.style.display = allSignals.length === 0 ? 'block' : 'none';
+
+  // Human grid — render first batch
+  hg.innerHTML = '';
+  loadMoreCards();
+  if (allSignals.length > PAGE_SIZE) setupInfiniteScroll();
 
   // Agent terminal
-  let agText = signals.length === 0 ? '<span class="ag-id">// sumi waiting for signals</span>' : '';
-  signals.forEach(s => {
+  let agText = allSignals.length === 0 ? '<span class="ag-id">// sumi waiting for signals</span>' : '';
+  allSignals.forEach(s => {
     agText += `<span class="ag-id">// ${esc(s.id.slice(0,8))} · ${esc(s.location||'unknown')} · ${formatDate(s.created_at)}</span>\n`;
     agText += `<span class="ag-p">{</span>\n`;
     agText += renderJsonLine('scene_type', s.scene_type) + ',\n';
