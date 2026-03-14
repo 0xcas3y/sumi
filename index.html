@@ -704,7 +704,7 @@ async function renderGallery() {
       >${esc(capText.slice(0,48))}${capText.length>48?'…':''}</div>
       <div class="wabi-row">
         <div class="wabi-bar-bg"><div class="wabi-bar-fill" style="width:${Math.round(wq*100)}%"></div></div>
-        <span class="wabi-val">wabi ${wq.toFixed(2)}</span>
+        <span class="wabi-val">pull ${wq.toFixed(2)}</span>
         ${(s.art_score||0) >= 8 ? '<span class="wabi-val" style="margin-left:auto;color:var(--sumi)">✦</span>' : ''}
       </div>`;
     if ((s.art_score||0) >= 8) card.classList.add('selected');
@@ -771,7 +771,7 @@ function updateDetailHuman() {
   document.getElementById('dpMeta').innerHTML = `
     <span class="dp-meta-item">loc<span class="dp-meta-val">${esc(s.location||'unknown')}</span></span>
     <span class="dp-meta-item">by<span class="dp-meta-val">${esc(s.author||'anonymous')}</span></span>
-    <span class="dp-meta-item">wabi<span class="dp-meta-val">${(s.wabi_quality||0).toFixed(2)}</span></span>
+    <span class="dp-meta-item">pull<span class="dp-meta-val">${(s.wabi_quality||0).toFixed(2)}</span></span>
     <span class="dp-meta-item">${formatDate(s.created_at)}</span>`;
   const tl = s.objects_present || [];
   document.getElementById('dpTags').innerHTML = tl.map(t=>`<span class="tag">${esc(t)}</span>`).join('');
@@ -1164,7 +1164,7 @@ async function renderAdmin() {
         </div>
         <div class="pending-text">${esc(s.zh||'—')}</div>
         <div class="pending-sumi">
-          wabi: ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${esc(s.time_of_day||'')}<br>
+          pull: ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${esc(s.time_of_day||'')}<br>
           "${esc(s.sumi_note||'')}"
         </div>
         <div class="pending-actions">
@@ -1190,7 +1190,7 @@ async function renderApproved() {
       <div class="approved-info">
         <div class="approved-loc">${esc(s.location||'unknown')} · ${esc(s.author||'anonymous')}</div>
         <div class="approved-zh">${esc((s.zh||'—').slice(0,80))}${(s.zh||'').length>80?'…':''}</div>
-        <div class="approved-wabi">wabi ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${formatDate(s.created_at)}</div>
+        <div class="approved-wabi">pull ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${formatDate(s.created_at)}</div>
       </div>
       <button class="btn-reject" onclick="rejectSignal('${s.id}',true)">Remove</button>
     </div>`).join('');
