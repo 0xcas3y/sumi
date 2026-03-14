@@ -382,7 +382,6 @@ footer { border-top:1px solid var(--rule); padding:2.5rem 3rem; display:flex; ju
   .topbar { padding:1rem 1.5rem; }
   .brand-sub, .sumi-status { display:none; }
   .view { padding:1.5rem; }
-  #humanGrid { grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1.5rem; }
   .detail-grid, .submit-layout, .about-layout { grid-template-columns:1fr; }
   .detail-img { min-height:260px; }
   .pending-card { grid-template-columns:1fr; }
@@ -660,7 +659,7 @@ function switchGalleryMode(mode, btn) {
   galleryMode = mode;
   document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('humanGrid').style.display = mode === 'human' ? 'block' : 'none';
+  document.getElementById('humanGrid').style.display = mode === 'human' ? '' : 'none';
   document.getElementById('agentGrid').classList.toggle('show', mode === 'agent');
 }
 
