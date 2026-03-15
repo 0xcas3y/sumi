@@ -685,17 +685,21 @@ function switchView(name, btn) {
   else document.querySelectorAll('.nav-tab')[['gallery','submit','about'].indexOf(name)]?.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
   if (name === 'gallery') renderGallery();
+  if (name === 'admin' && isAdmin) renderAdmin();
 }
 
 // ── SECRET ADMIN ──
 (function() {
   let buf = '';
   document.addEventListener('keypress', e => {
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
     buf += e.key;
     if (buf.length > 5) buf = buf.slice(-5);
     if (buf === 'admin') {
+      buf = '';
       const btn = document.getElementById('adminNavBtn');
-      if (btn) { btn.style.display = ''; btn.click(); }
+      if (btn) btn.style.display = '';
+      switchView('admin', btn);
     }
   });
 })();
