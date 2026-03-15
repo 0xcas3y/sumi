@@ -874,9 +874,10 @@ function updateDetailHuman() {
   slot.className = 'dp-text' + (lang==='jp'?' jp':'');
   slot.style.animation='none'; slot.offsetHeight; slot.style.animation='';
   slot.textContent = s[lang] || '—';
+  const authorLabel = (!s.author || s.author === 'anonymous') ? 'by anonymous signal' : 'by ' + esc(s.author);
   document.getElementById('dpMeta').innerHTML = `
-    <span class="dp-meta-item">loc<span class="dp-meta-val">${esc(s.location||'unknown')}</span></span>
-    <span class="dp-meta-item">by<span class="dp-meta-val">${esc(s.author||'anonymous')}</span></span>
+    <span class="dp-meta-item">location: <span class="dp-meta-val">${esc(s.location||'unknown')}</span></span>
+    <span class="dp-meta-item">${authorLabel}</span>
     <span class="dp-meta-item">sumi signal:<span class="dp-meta-val">${(s.wabi_quality||0).toFixed(2)}</span></span>
     <span class="dp-meta-item">${formatDate(s.created_at)}</span>`;
   const tl = s.objects_present || [];
