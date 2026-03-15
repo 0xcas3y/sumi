@@ -684,7 +684,10 @@ function switchView(name, btn) {
   if (btn) btn.classList.add('active');
   else document.querySelectorAll('.nav-tab')[['gallery','submit','about'].indexOf(name)]?.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
-  if (name === 'gallery') // ── SECRET ADMIN ──
+  if (name === 'gallery') renderGallery();
+}
+
+// ── SECRET ADMIN ──
 (function() {
   let buf = '';
   document.addEventListener('keypress', e => {
@@ -696,10 +699,6 @@ function switchView(name, btn) {
     }
   });
 })();
-
-renderGallery();
-  if (name === 'admin' && isAdmin) renderAdmin();
-}
 
 // ── GALLERY ──
 function switchGalleryMode(mode, btn) {
