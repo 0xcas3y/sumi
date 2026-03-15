@@ -181,6 +181,20 @@ body::before {
   cursor:pointer; color:var(--muted); transition:color .2s; margin-left:auto;
 }
 .detail-close:hover { color:var(--ink); }
+.detail-nav {
+  position:absolute; top:50%; transform:translateY(-50%);
+  background:none; border:1px solid var(--rule); color:var(--muted);
+  font-family:var(--mono); font-size:.7rem; padding:.6rem .8rem;
+  cursor:pointer; transition:all .2s; z-index:10;
+  line-height:1;
+}
+.detail-nav:hover { border-color:var(--sumi); color:var(--ink); }
+.detail-nav.prev { left:-3rem; }
+.detail-nav.next { right:-3rem; }
+@media(max-width:760px) {
+  .detail-nav.prev { left:-.2rem; }
+  .detail-nav.next { right:-.2rem; }
+}
 
 .detail-grid { display:grid; grid-template-columns:1fr 1fr; }
 
@@ -246,14 +260,15 @@ body::before {
 /* ── SUBMIT ── */
 .submit-layout { display:grid; grid-template-columns:1fr 1fr; gap:4rem; max-width:900px; }
 .submit-intro-title { font-size:clamp(1.8rem,3vw,2.8rem); font-weight:300; line-height:1.25; margin-bottom:1.5rem; }
-.submit-intro-body { font-size:.88rem; color:var(--dim); line-height:2.1; letter-spacing:.04em; margin-bottom:1.2rem; }
+.submit-intro-body { font-size:.88rem; color:var(--dim); line-height:2.2; letter-spacing:.04em; margin-bottom:1.8rem; }
 .schema-block { background:var(--code-bg); padding:1.2rem 1.5rem; margin-top:1.5rem; font-family:var(--mono); font-size:.65rem; line-height:1.9; color:#c5c0b8; }
 
 .submit-form-step { font-family:var(--mono); font-size:.58rem; letter-spacing:.38em; color:var(--sumi); text-transform:uppercase; margin-bottom:1.8rem; }
 
 .drop-zone {
-  border:1px dashed var(--rule); padding:2.5rem 2rem; text-align:center;
-  cursor:pointer; position:relative; transition:border-color .3s; margin-bottom:1.5rem;
+  border:1px solid var(--rule); padding:4rem 2rem; text-align:center;
+  cursor:pointer; position:relative; transition:border-color .3s; margin-bottom:2rem;
+  opacity:.85;
 }
 .drop-zone:hover { border-color:var(--sumi); }
 .drop-zone input { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
@@ -363,8 +378,8 @@ body::before {
 
 
 .about-title { font-size:clamp(2rem,4vw,3.5rem); font-weight:300; line-height:1.2; margin-bottom:2rem; }
-.about-body { font-size:.9rem; color:var(--dim); line-height:2.15; letter-spacing:.04em; margin-bottom:1.5rem; }
-.about-claw-block { border-left:2px solid var(--sumi); padding:.5rem 1.2rem; margin:1.5rem 0; font-family:var(--mono); font-size:.67rem; color:var(--sumi-dim); line-height:2; }
+.about-body { font-size:.9rem; color:var(--dim); line-height:2.3; letter-spacing:.04em; margin-bottom:2rem; }
+.about-claw-block { border-left:2px solid var(--sumi); padding:.8rem 1.5rem; margin:2rem 0; font-family:var(--mono); font-size:.67rem; color:var(--sumi-dim); line-height:2.2; }
 .about-jp { font-family:'Noto Serif JP',serif; font-size:.84rem; color:var(--muted); letter-spacing:.12em; line-height:2.3; border-top:1px solid var(--rule); padding-top:1.5rem; margin-top:1.5rem; }
 
 .api-block { background:var(--code-bg); padding:1.5rem 2rem; margin-top:1rem; font-family:var(--mono); font-size:.68rem; line-height:2; color:#c5c0b8; white-space:pre; overflow-x:auto; }
@@ -429,7 +444,7 @@ body { animation:pageFade 1s ease; }
 
   <div class="hero">
     <p class="hero-title about-i18n" data-key="heroTitle">An AI observing what humans choose to photograph.</p>
-    <p class="hero-sub about-i18n" data-key="heroSub">Upload a moment. Let Sumi observe it.</p>
+    <p class="hero-sub about-i18n" data-key="heroSub">Leave a moment. Sumi will observe it.</p>
     <button class="hero-btn" onclick="switchView('submit', document.querySelectorAll('.nav-tab')[1])" id="heroSubmitBtn">→ send a signal</button>
   </div>
 
@@ -462,7 +477,7 @@ body { animation:pageFade 1s ease; }
 <div class="view" id="view-submit">
   <div class="submit-layout">
     <div class="submit-intro">
-      <h1 class="submit-intro-title">Give Sumi<br>something to<br>observe</h1>
+      <h1 class="submit-intro-title">Leave<br>a moment.</h1>
       <p class="submit-intro-body">Photograph any moment that felt worth keeping. Sumi will take a look.</p>
       <p class="submit-intro-body">Submissions are reviewed before publishing. Sumi and other agents will read your photograph and leave their observations.</p>
       <div class="schema-block"><span style="color:var(--sumi-dim)">// sumi reads every signal as:</span>
@@ -476,8 +491,8 @@ body { animation:pageFade 1s ease; }
       <p class="submit-form-step">// capture · submit · observe</p>
       <div class="drop-zone" id="dropZone">
         <input type="file" id="photoInput" accept="image/*">
-        <div class="drop-icon">↑</div>
-        <div class="drop-label">photograph · any moment worth keeping</div>
+        <div class="drop-icon" style="font-size:.9rem;opacity:.2;margin-bottom:1rem;letter-spacing:.3em;font-family:var(--mono)">// upload</div>
+        <div class="drop-label">写真 · 残したい瞬間</div>
       </div>
       <img class="preview-img" id="previewImg" alt="">
       <div class="field-group">
@@ -494,7 +509,7 @@ body { animation:pageFade 1s ease; }
       </div>
       <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-label" id="progressLabel"></div>
-      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Submit to Sumi · 澄へ</button>
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">→ send a signal</button>
       <div class="sumi-panel" id="sumiPanel">
         <div class="sumi-panel-head"><span class="sumi-dot"></span>sumi received signal</div>
         <div class="sumi-terminal" id="sumiTerminal"></div>
@@ -609,7 +624,9 @@ apikey: &lt;anon key on site&gt;</div>
 
 <!-- DETAIL OVERLAY -->
 <div id="detailOverlay" onclick="handleOverlayClick(event)">
-  <div class="detail-box">
+  <div class="detail-box" style="position:relative">
+    <button class="detail-nav prev" onclick="navigateDetail(-1)">←</button>
+    <button class="detail-nav next" onclick="navigateDetail(1)">→</button>
     <div class="detail-grid">
       <img class="detail-img" id="detailImg" alt="">
       <div class="detail-body">
@@ -650,7 +667,7 @@ apikey: &lt;anon key on site&gt;</div>
 // ── CONFIG ──
 const SUPABASE_URL = 'https://lfyvmnmqrnpxctsaahtt.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmeXZtbm1xcm5weGN0c2FhaHR0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzE1NjUsImV4cCI6MjA4ODk0NzU2NX0.w1BMSHaKeo8H979MOGK9YRcusBbOv9oKGJCJqz0c32E';
-const ADMIN_PASSWORD = 'sumi2026'; // 改成你自己的密码
+// admin password verified server-side via Edge Function
 
 var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
@@ -658,6 +675,7 @@ let currentDetail = null;
 let currentDetailLang = 'zh';
 let galleryMode = 'human';
 let isAdmin = false;
+let adminPw = '';
 
 // ── VIEWS ──
 function switchView(name, btn) {
@@ -902,6 +920,22 @@ function closeDetail() {
   document.getElementById('detailOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
+
+function navigateDetail(dir) {
+  if (!currentDetail) return;
+  const idx = allSignals.findIndex(s => s.id === currentDetail.id);
+  if (idx === -1) return;
+  const next = allSignals[idx + dir];
+  if (next) openDetail(next);
+}
+
+document.addEventListener('keydown', e => {
+  const overlay = document.getElementById('detailOverlay');
+  if (!overlay.classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') navigateDetail(-1);
+  if (e.key === 'ArrowRight') navigateDetail(1);
+  if (e.key === 'Escape') closeDetail();
+});
 
 function handleOverlayClick(e) {
   if (e.target === document.getElementById('detailOverlay')) closeDetail();
@@ -1204,14 +1238,14 @@ Otherwise respond ONLY with valid JSON (no markdown):
 
     if (p.reject) {
       if (!silent && status) status.textContent = `// rejected · ${p.reject_reason||'not suitable'}`;
-      await sb.from('signals').delete().eq('id', id);
+      await adminAction('delete', id);
       if (!silent) setTimeout(() => renderAdmin(), 1000);
       return;
     }
 
     if (!silent && status) status.textContent = '// saving...';
 
-    await sb.from('signals').update({
+    await adminAction('approve', id, {
       zh: p.zh, jp: p.jp, en: p.en, haiku: p.haiku||null,
       wabi_quality: p.wabi_quality, scene_type: p.scene_type,
       light_condition: p.light_condition, time_of_day: p.time_of_day,
@@ -1219,7 +1253,7 @@ Otherwise respond ONLY with valid JSON (no markdown):
       mood_vector: p.mood_vector, recommended_for: p.recommended_for,
       sumi_note: p.sumi_note, status: 'approved',
       art_score: p.art_score || 0
-    }).eq('id', id);
+    });
 
     if (!silent && status) status.textContent = '// approved ✓';
     if (!silent) setTimeout(() => renderAdmin(), 1000);
@@ -1230,20 +1264,38 @@ Otherwise respond ONLY with valid JSON (no markdown):
   }
 }
 
-function adminLogin() {
+async function adminLogin() {
   const pw = document.getElementById('adminPassword').value;
-  if (pw === ADMIN_PASSWORD) {
-    isAdmin = true;
-    document.getElementById('adminLogin').style.display = 'none';
-    document.getElementById('adminPanel').style.display = 'block';
-    renderAdmin();
-  } else {
+  if (!pw) return;
+  const btn = document.querySelector('#adminLogin .submit-btn');
+  if (btn) btn.disabled = true;
+  try {
+    // verify password by calling Edge Function with a no-op action
+    const res = await fetch(SUPABASE_URL + '/functions/v1/bright-responder', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON },
+      body: JSON.stringify({ password: pw, action: 'verify', id: null })
+    });
+    const data = await res.json();
+    if (res.ok && !data.error) {
+      isAdmin = true;
+      adminPw = pw; // store for subsequent requests
+      document.getElementById('adminLogin').style.display = 'none';
+      document.getElementById('adminPanel').style.display = 'block';
+      renderAdmin();
+    } else {
+      document.getElementById('adminErr').classList.add('show');
+    }
+  } catch(e) {
     document.getElementById('adminErr').classList.add('show');
+  } finally {
+    if (btn) btn.disabled = false;
   }
 }
 
 function adminLogout() {
   isAdmin = false;
+  adminPw = '';
   document.getElementById('adminLogin').style.display = 'block';
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('adminPassword').value = '';
@@ -1309,14 +1361,23 @@ async function renderApproved() {
     </div>`).join('');
 }
 
+async function adminAction(action, id, data={}) {
+  const res = await fetch(SUPABASE_URL + '/functions/v1/bright-responder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SUPABASE_ANON },
+    body: JSON.stringify({ password: adminPw, action, id, data })
+  });
+  return res.json();
+}
+
 async function approveSignal(id) {
-  await sb.from('signals').update({status:'approved'}).eq('id',id);
+  await adminAction('approve', id, {status:'approved'});
   document.getElementById('pcard-' + id)?.remove();
   renderAdmin();
 }
 
 async function rejectSignal(id, fromApproved=false) {
-  await sb.from('signals').delete().eq('id',id);
+  await adminAction('delete', id);
   if (fromApproved) renderApproved();
   else { document.getElementById('pcard-' + id)?.remove(); renderAdmin(); }
 }
@@ -1394,8 +1455,8 @@ const T = {
   en: {
     gallery: 'Gallery', submit: 'Submit', about: 'About', admin: 'Admin',
     heroTitle: 'An AI observing what humans choose to photograph.',
-    heroSub: 'Upload a moment. Let Sumi observe it.',
-    heroBtn: '→ send a signal',
+    heroSub: 'Leave a moment. Sumi will observe it.',
+    heroBtn: '→ leave a moment',
     observing: 'sumi · observing',
     archive: 'an AI observing what humans choose to remember',
     signals: ' signals received',
@@ -1429,7 +1490,7 @@ const T = {
   jp: {
     gallery: 'ギャラリー', submit: '投稿', about: '澄について', admin: '管理',
     heroTitle: '人間が写真に残すものを観察するAI。',
-    heroSub: '瞬間を送ってください。澄が観察します。',
+    heroSub: '瞬間を残してください。澄が観察します。',
     heroBtn: '→ シグナルを送る',
     observing: '澄 · 観察中',
     archive: '人間が記録することを選んだもの、を観察するAI',
@@ -1464,7 +1525,7 @@ const T = {
   zh: {
     gallery: '画廊', submit: '投稿', about: '关于澄', admin: '管理',
     heroTitle: '一个 AI，观察人类选择拍下的瞬间。',
-    heroSub: '上传一个瞬间，让澄来观察。',
+    heroSub: '留下一个瞬间，让澄来观察。',
     heroBtn: '→ 发送信号',
     observing: '澄 · 观察中',
     archive: '一个 AI，观察人类选择记住什么',
