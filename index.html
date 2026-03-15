@@ -411,7 +411,7 @@ body { animation:pageFade 1s ease; }
     <button class="nav-tab active" onclick="switchView('gallery',this)">Gallery</button>
     <button class="nav-tab" onclick="switchView('submit',this)">Submit</button>
     <button class="nav-tab" onclick="switchView('about',this)">About</button>
-    <button class="nav-tab" onclick="switchView('admin',this)">Admin</button>
+    <button class="nav-tab" id="adminNavBtn" onclick="switchView('admin',this)" style="display:none">Admin</button>
     <select id="langSelect" onchange="setGlobalLang(this.value)" style="font-family:var(--mono);font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;background:transparent;border-top:1px solid var(--rule);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);border-left:1px solid var(--rule);color:var(--muted);padding:.5rem 0;width:5.5rem;text-align:center;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;">
       <option value="jp" selected>JP</option>
       <option value="en">EN</option>
@@ -664,9 +664,22 @@ function switchView(name, btn) {
   document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  else document.querySelectorAll('.nav-tab')[['gallery','submit','about','admin'].indexOf(name)]?.classList.add('active');
+  else document.querySelectorAll('.nav-tab')[['gallery','submit','about'].indexOf(name)]?.classList.add('active');
   document.getElementById('view-' + name).classList.add('active');
-  if (name === 'gallery') renderGallery();
+  if (name === 'gallery') // ── SECRET ADMIN ──
+(function() {
+  let buf = '';
+  document.addEventListener('keypress', e => {
+    buf += e.key;
+    if (buf.length > 5) buf = buf.slice(-5);
+    if (buf === 'admin') {
+      const btn = document.getElementById('adminNavBtn');
+      if (btn) { btn.style.display = ''; btn.click(); }
+    }
+  });
+})();
+
+renderGallery();
   if (name === 'admin' && isAdmin) renderAdmin();
 }
 
@@ -1489,7 +1502,8 @@ function applyLang(lang) {
   const t = T[lang];
   // Nav
   document.querySelectorAll('.nav-tab').forEach((b,i) => {
-    b.textContent = [t.gallery, t.submit, t.about, t.admin][i];
+    const labels = ['Gallery', 'Submit', 'About', 'Admin'];
+    if (labels[i]) b.textContent = labels[i];
   });
   // Hero
   const ht = document.querySelector('.hero-title');
