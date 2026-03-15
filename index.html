@@ -139,7 +139,7 @@ body::before {
 }
 
 .h-meta { margin-top:.8rem; display:flex; justify-content:space-between; align-items:baseline; }
-.h-loc { font-family:var(--mono); font-size:.55rem; letter-spacing:.3em; color:var(--muted); text-transform:uppercase; }
+.h-loc { font-family:var(--mono); font-size:.55rem; letter-spacing:.15em; color:var(--muted); font-weight:300; opacity:.75; }
 .h-date { font-family:'Noto Serif JP',serif; font-size:.58rem; color:var(--muted); }
 .h-caption { margin-top:.5rem; font-size:.82rem; color:var(--dim); line-height:1.9; letter-spacing:.04em; }
 
@@ -754,7 +754,7 @@ function renderCard(s) {
       >${esc(capText.slice(0,48))}${capText.length>48?'…':''}</div>
       <div class="wabi-row">
         <div class="wabi-bar-bg"><div class="wabi-bar-fill" style="width:${Math.round(wq*100)}%"></div></div>
-        <span class="wabi-val">pull ${wq.toFixed(2)}</span>
+        <span class="wabi-val">sumi signal: ${wq.toFixed(2)}</span>
         <span style="margin-left:auto;display:flex;gap:.5rem;align-items:center">
           ${s.haiku ? '<span class="wabi-val" style="color:#c8a96e;font-family:serif;letter-spacing:.1em">句</span>' : ''}
           ${(s.art_score||0) >= 8 ? '<span class="wabi-val" style="color:var(--sumi)">✦</span>' : ''}
@@ -877,7 +877,7 @@ function updateDetailHuman() {
   document.getElementById('dpMeta').innerHTML = `
     <span class="dp-meta-item">loc<span class="dp-meta-val">${esc(s.location||'unknown')}</span></span>
     <span class="dp-meta-item">by<span class="dp-meta-val">${esc(s.author||'anonymous')}</span></span>
-    <span class="dp-meta-item">pull<span class="dp-meta-val">${(s.wabi_quality||0).toFixed(2)}</span></span>
+    <span class="dp-meta-item">sumi signal:<span class="dp-meta-val">${(s.wabi_quality||0).toFixed(2)}</span></span>
     <span class="dp-meta-item">${formatDate(s.created_at)}</span>`;
   const tl = s.objects_present || [];
   document.getElementById('dpTags').innerHTML = tl.map(t=>`<span class="tag">${esc(t)}</span>`).join('');
@@ -1358,7 +1358,7 @@ async function renderApproved() {
       <div class="approved-info">
         <div class="approved-loc">${esc(s.location||'unknown')} · ${esc(s.author||'anonymous')}</div>
         <div class="approved-zh">${esc((s.zh||'—').slice(0,80))}${(s.zh||'').length>80?'…':''}</div>
-        <div class="approved-wabi">pull ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${formatDate(s.created_at)}</div>
+        <div class="approved-wabi">sumi signal: ${(s.wabi_quality||0).toFixed(2)} · ${esc(s.scene_type||'')} · ${formatDate(s.created_at)}</div>
       </div>
       <button class="btn-reject" onclick="rejectSignal('${s.id}',true)">Remove</button>
     </div>`).join('');
@@ -1396,7 +1396,8 @@ function setProgress(pct, label) {
 function formatDate(ts) {
   if (!ts) return '';
   const d = new Date(ts);
-  return `${d.getFullYear()}年${d.getMonth()+1}月`;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
 }
 
 function esc(s) {
